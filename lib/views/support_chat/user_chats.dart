@@ -1,6 +1,6 @@
-import 'package:Reclaim_admin_panel/const/constants.dart';
-import 'package:Reclaim_admin_panel/views/support_chat/user_messages.dart';
-import 'package:Reclaim_admin_panel/views/user_chats/order_messages.dart';
+import 'package:reclaim_admin_panel/const/constants.dart';
+import 'package:reclaim_admin_panel/views/support_chat/user_messages.dart';
+import 'package:reclaim_admin_panel/views/user_chats/order_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';

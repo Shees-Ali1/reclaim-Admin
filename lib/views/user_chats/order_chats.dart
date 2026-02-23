@@ -1,5 +1,5 @@
-import 'package:Reclaim_admin_panel/const/constants.dart';
-import 'package:Reclaim_admin_panel/views/user_chats/order_messages.dart';
+import 'package:reclaim_admin_panel/const/constants.dart';
+import 'package:reclaim_admin_panel/views/user_chats/order_messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -171,16 +171,24 @@ class _OrderUserChatsState extends State<OrderUserChats> {
                                       .doc(productId)
                                       .get(),
                                   builder: (context, productSnapshot) {
-                                    if (!productSnapshot.hasData) {
+                                    if (productSnapshot.connectionState ==
+                                        ConnectionState.waiting) {
                                       return const ListTile(
                                         title: Text('Loading product...'),
+                                      );
+                                    }
+
+                                    if (!productSnapshot.hasData ||
+                                        !productSnapshot.data!.exists) {
+                                      return const ListTile(
+                                        title: Text('Product not found'),
                                       );
                                     }
 
                                     final productData = productSnapshot.data!
                                         .data() as Map<String, dynamic>;
                                     final productName =
-                                        productData['productName'];
+                                        productData['productName'] ?? 'N/A';
                                     // final productImage = productData['productImages'];
 
                                     return Column(
@@ -195,32 +203,46 @@ class _OrderUserChatsState extends State<OrderUserChats> {
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      productData['productImages']
-                                                              [0] ??
-                                                          ''),
+                                                  image: (productData[
+                                                                  'productImages'] !=
+                                                              null &&
+                                                          productData[
+                                                                  'productImages']
+                                                              .isNotEmpty &&
+                                                          productData['productImages']
+                                                                  [0]
+                                                              .toString()
+                                                              .isNotEmpty)
+                                                      ? NetworkImage(productData[
+                                                          'productImages'][0])
+                                                      : const AssetImage(
+                                                              'assets/images/logo.png')
+                                                          as ImageProvider,
                                                   fit: BoxFit.contain,
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(width: 5,),
+                                            SizedBox(
+                                              width: 5,
+                                            ),
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
                                                 Text(
                                                   "Product Name: $productName",
-                                                  style: TextStyle(color: Colors.white),
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                                 Text(
                                                   "OrderId: ${orderData['orderId']}",
-                                                  style: TextStyle(color: Colors.white),
+                                                  style: TextStyle(
+                                                      color: Colors.white),
                                                 ),
                                               ],
                                             ),
                                           ],
                                         ),
-
-
                                       ],
                                     );
                                   })));

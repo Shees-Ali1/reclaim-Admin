@@ -1,4 +1,4 @@
-import 'package:Reclaim_admin_panel/const/constants.dart';
+import 'package:reclaim_admin_panel/const/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +48,7 @@ class _SupportUserMessagesState extends State<SupportUserMessages> {
   Widget build(BuildContext context) {
     return Scaffold(
         bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 250,vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 250, vertical: 10),
           child: TextField(
             onSubmitted: (val) async {
               await sendMessage();
@@ -58,7 +58,6 @@ class _SupportUserMessagesState extends State<SupportUserMessages> {
               hintText: "Type your message",
               fillColor: primaryColor,
               hintStyle: TextStyle(color: Colors.white),
-
               filled: true,
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
@@ -100,7 +99,6 @@ class _SupportUserMessagesState extends State<SupportUserMessages> {
                   return Center(
                     child: CircularProgressIndicator(
                       color: primaryColor,
-
                     ),
                   );
                 } else if (snapshot.hasError || !snapshot.hasData) {
@@ -254,7 +252,12 @@ class _UserProfileDetailState extends State<UserProfileDetail> {
             children: [
               CircleAvatar(
                 radius: 20,
-                backgroundImage: NetworkImage(userData['userImage']),
+                backgroundImage: (userData != null &&
+                        userData['userImage'] != null &&
+                        userData['userImage'].toString().isNotEmpty)
+                    ? NetworkImage(userData['userImage'])
+                    : const AssetImage('assets/images/logo.png')
+                        as ImageProvider,
               ),
               Text(
                 "${userData['userName'].toString().capitalizeFirst}\n(${widget.role})",

@@ -17,6 +17,15 @@ FirebaseFirestore firestore = FirebaseFirestore.instance;
 class _Order_ScreenState extends State<Order_Screen> {
   String searchQuery = '';
 
+  String _formatTimestamp(dynamic timestamp) {
+    if (timestamp != null && timestamp is Timestamp) {
+      DateTime dateTime = timestamp.toDate();
+      return "${dateTime.day}/${dateTime.month}/${dateTime.year}";
+    } else {
+      return 'N/A';
+    }
+  }
+
   Future<Map<String, dynamic>> getUserData(String userId) async {
     DocumentSnapshot userDoc =
         await firestore.collection('userDetails').doc(userId).get();
@@ -55,7 +64,7 @@ class _Order_ScreenState extends State<Order_Screen> {
       'buyerName': buyerData['userName'] ?? 'Unknown',
       'sellerName': sellerData['userName'] ?? 'Unknown',
       'orderDate': order['orderDate'],
-      'buyingprice': order['buyingprice'],
+      'finalPrice': order['finalPrice'],
       // 'deliveryStatus': order['deliveryStatus']
     };
   }
@@ -80,9 +89,7 @@ class _Order_ScreenState extends State<Order_Screen> {
         //   ),
         // ),
         body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 20),
-
-
+          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
           child: Column(
             children: [
               Row(
@@ -106,35 +113,38 @@ class _Order_ScreenState extends State<Order_Screen> {
                         )
                       : SizedBox.shrink(),
                   Padding(
-                    padding:  EdgeInsets.only(      left: width <= 375
-                        ? 10
-                        : width <= 520
-                        ? 10 // You can specify the width for widths less than 425
-                        : width < 768
-                        ? 15 // You can specify the width for widths less than 768
-                        : width < 1024
-                        ? 15 // You can specify the width for widths less than 1024
-                        : width <= 1440
-                        ? 15
-                        : width > 1440 && width <= 2550
-                        ? 15
-                        : 15, top: 20, bottom: 20),
+                    padding: EdgeInsets.only(
+                        left: width <= 375
+                            ? 10
+                            : width <= 520
+                                ? 10 // You can specify the width for widths less than 425
+                                : width < 768
+                                    ? 15 // You can specify the width for widths less than 768
+                                    : width < 1024
+                                        ? 15 // You can specify the width for widths less than 1024
+                                        : width <= 1440
+                                            ? 15
+                                            : width > 1440 && width <= 2550
+                                                ? 15
+                                                : 15,
+                        top: 20,
+                        bottom: 20),
                     child: SizedBox(
                       width: width <= 375
                           ? 200
                           : width <= 425
-                          ? 240:
-                      width <= 520
-                          ? 260 // You can specify the width for widths less than 425
-                          : width < 768
-                          ? 370 // You can specify the width for widths less than 768
-                          : width < 1024
-                          ? 400 // You can specify the width for widths less than 1024
-                          : width <= 1440
-                          ? 500
-                          : width > 1440 && width <= 2550
-                          ? 500
-                          : 800,
+                              ? 240
+                              : width <= 520
+                                  ? 260 // You can specify the width for widths less than 425
+                                  : width < 768
+                                      ? 370 // You can specify the width for widths less than 768
+                                      : width < 1024
+                                          ? 400 // You can specify the width for widths less than 1024
+                                          : width <= 1440
+                                              ? 500
+                                              : width > 1440 && width <= 2550
+                                                  ? 500
+                                                  : 800,
                       child: TextField(
                         onChanged: (value) {
                           setState(() {
@@ -144,7 +154,6 @@ class _Order_ScreenState extends State<Order_Screen> {
                         decoration: InputDecoration(
                           hintText: "Search",
                           hintStyle: TextStyle(color: Colors.white),
-
                           fillColor: primaryColor,
                           filled: true,
                           border: const OutlineInputBorder(
@@ -152,12 +161,14 @@ class _Order_ScreenState extends State<Order_Screen> {
                             borderRadius: BorderRadius.all(Radius.circular(10)),
                           ),
                           suffixIcon: Container(
-                            padding: const EdgeInsets.all(defaultPadding * 0.75),
+                            padding:
+                                const EdgeInsets.all(defaultPadding * 0.75),
                             margin: const EdgeInsets.symmetric(
                                 horizontal: defaultPadding / 2),
                             decoration: const BoxDecoration(
                               color: primaryColor,
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             child: const Icon(
                               Icons.search,
@@ -172,14 +183,15 @@ class _Order_ScreenState extends State<Order_Screen> {
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
-
                 child: Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
                         child: Text(
-                            overflow:  width <= 520?TextOverflow.ellipsis:TextOverflow.visible,
-                            maxLines: width <= 520?1:2,
+                            overflow: width <= 520
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.visible,
+                            maxLines: width <= 520 ? 1 : 2,
                             'Image',
                             style: TextStyle(
                                 fontSize: 18,
@@ -188,8 +200,10 @@ class _Order_ScreenState extends State<Order_Screen> {
                             textAlign: TextAlign.center)),
                     Expanded(
                         child: Text(
-                            overflow:  width <= 520?TextOverflow.ellipsis:TextOverflow.visible,
-                            maxLines: width <= 520?1:2,
+                            overflow: width <= 520
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.visible,
+                            maxLines: width <= 520 ? 1 : 2,
                             'Title',
                             style: TextStyle(
                                 fontSize: 18,
@@ -198,8 +212,10 @@ class _Order_ScreenState extends State<Order_Screen> {
                             textAlign: TextAlign.center)),
                     Expanded(
                         child: Text(
-                            overflow:  width <= 520?TextOverflow.ellipsis:TextOverflow.visible,
-                            maxLines: width <= 520?1:2,
+                            overflow: width <= 520
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.visible,
+                            maxLines: width <= 520 ? 1 : 2,
                             'Buyer',
                             style: TextStyle(
                                 fontSize: 18,
@@ -208,8 +224,10 @@ class _Order_ScreenState extends State<Order_Screen> {
                             textAlign: TextAlign.center)),
                     Expanded(
                         child: Text(
-                            overflow:  width <= 520?TextOverflow.ellipsis:TextOverflow.visible,
-                            maxLines: width <= 520?1:2,
+                            overflow: width <= 520
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.visible,
+                            maxLines: width <= 520 ? 1 : 2,
                             'Seller',
                             style: TextStyle(
                                 fontSize: 18,
@@ -218,8 +236,10 @@ class _Order_ScreenState extends State<Order_Screen> {
                             textAlign: TextAlign.center)),
                     Expanded(
                         child: Text(
-                            overflow:  width <= 520?TextOverflow.ellipsis:TextOverflow.visible,
-                            maxLines: width <= 520?1:2,
+                            overflow: width <= 520
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.visible,
+                            maxLines: width <= 520 ? 1 : 2,
                             'Date',
                             style: TextStyle(
                                 fontSize: 18,
@@ -228,8 +248,10 @@ class _Order_ScreenState extends State<Order_Screen> {
                             textAlign: TextAlign.center)),
                     Expanded(
                         child: Text(
-                            overflow:  width <= 520?TextOverflow.ellipsis:TextOverflow.visible,
-                            maxLines: width <= 520?1:2,
+                            overflow: width <= 520
+                                ? TextOverflow.ellipsis
+                                : TextOverflow.visible,
+                            maxLines: width <= 520 ? 1 : 2,
                             'Price',
                             style: TextStyle(
                                 fontSize: 18,
@@ -266,7 +288,6 @@ class _Order_ScreenState extends State<Order_Screen> {
           return const Center(
             child: CircularProgressIndicator(
               color: primaryColor,
-
             ),
           );
         } else if (snapshot.hasError) {
@@ -339,8 +360,13 @@ class _Order_ScreenState extends State<Order_Screen> {
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   image: DecorationImage(
-                                    image: NetworkImage(
-                                        order['productImages'][0] ?? ''),
+                                    image: (order['productImages'] != null &&
+                                            order['productImages'].isNotEmpty)
+                                        ? NetworkImage(
+                                            order['productImages'][0])
+                                        : const AssetImage(
+                                                'assets/images/logo.png')
+                                            as ImageProvider,
                                     fit: BoxFit.contain,
                                   ),
                                 ),
@@ -362,7 +388,7 @@ class _Order_ScreenState extends State<Order_Screen> {
                                       color: secondaryColor,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 15),
-                                  order['buyerName'],
+                                  order['buyerName'] ?? 'Unknown',
                                   textAlign: TextAlign.center),
                             ),
                             Expanded(
@@ -371,18 +397,20 @@ class _Order_ScreenState extends State<Order_Screen> {
                                       color: secondaryColor,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 15),
-                                  order['sellerName'],
+                                  order['sellerName'] ?? 'Unknown',
                                   textAlign: TextAlign.center),
                             ),
                             Expanded(
                               child: Text(
-                                  overflow:  width <= 520?TextOverflow.ellipsis:TextOverflow.visible,
-                                  maxLines: width <= 520?1:2,
+                                  overflow: width <= 520
+                                      ? TextOverflow.ellipsis
+                                      : TextOverflow.visible,
+                                  maxLines: width <= 520 ? 1 : 2,
                                   style: TextStyle(
                                       color: secondaryColor,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 15),
-                                  order['orderDate'].toDate().toString(),
+                                  _formatTimestamp(order['orderDate']),
                                   textAlign: TextAlign.center),
                             ),
                             Expanded(
@@ -391,7 +419,7 @@ class _Order_ScreenState extends State<Order_Screen> {
                                       color: secondaryColor,
                                       fontWeight: FontWeight.w400,
                                       fontSize: 15),
-                                  order['buyingprice'].toString(),
+                                  (order['finalPrice'] ?? '0').toString(),
                                   textAlign: TextAlign.center),
                             ),
                             // Expanded(
@@ -402,8 +430,8 @@ class _Order_ScreenState extends State<Order_Screen> {
                         ),
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 30),
-
-                          child: const Divider(color: Colors.grey, thickness: 2),
+                          child:
+                              const Divider(color: Colors.grey, thickness: 2),
                         ),
                       ],
                     );

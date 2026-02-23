@@ -450,9 +450,15 @@ class _BookListViewState extends State<BookListView> {
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
-                                        image: NetworkImage(
-                                            bookData['productImages'][0] ??
-                                                ''),
+                                        image: (bookData['productImages'] !=
+                                                    null &&
+                                                bookData['productImages']
+                                                    .isNotEmpty)
+                                            ? NetworkImage(
+                                                bookData['productImages'][0])
+                                            : const AssetImage(
+                                                    'assets/images/logo.png')
+                                                as ImageProvider,
                                         fit: BoxFit.contain,
                                       ),
                                     ),

@@ -105,7 +105,6 @@ class WithdrawalRequest extends StatelessWidget {
                   return Center(
                     child: CircularProgressIndicator(
                       color: primaryColor,
-
                     ),
                   );
                 }
@@ -282,9 +281,9 @@ class _StatusDropdownState extends State<StatusDropdown> {
       } else if (_selectedStatus == 'Accepted') {
         await withdrawalRequestRef.update({'withdrawStatus': newStatus});
       }
-      print('object');
+      debugPrint('Status updated');
     } catch (e) {
-      print('Error$e');
+      debugPrint('Error: $e');
     }
   }
 

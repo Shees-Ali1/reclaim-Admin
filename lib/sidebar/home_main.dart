@@ -62,22 +62,20 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
 
   @override
   Widget build(BuildContext context) {
-    print('hellosidebarController${sidebarController.selectedindex.value}');
+    // print('hellosidebarController${sidebarController.selectedindex.value}');
     // final setNameProvider=Provider.of<GetHeadingNurseName>(context,listen: false);
     return GetBuilder<SidebarController>(builder: (sidebarController) {
       return SidebarX(
-
         controller: sidebarController.controller,
         theme: SidebarXTheme(
-
           margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: primaryColor,
             borderRadius: BorderRadius.circular(20),
           ),
           hoverColor: Colors.white,
-          textStyle:
-              TextStyle(color: primaryColor.withOpacity(0.5), fontSize: 18),
+          textStyle: TextStyle(
+              color: primaryColor.withValues(alpha: 0.5), fontSize: 18),
           selectedTextStyle: const TextStyle(color: primaryColor, fontSize: 18),
           hoverTextStyle: const TextStyle(
             fontSize: 18,
@@ -96,7 +94,7 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
               color: Colors.white,
             ),
             gradient: LinearGradient(
-              colors: [Colors.white10, primaryColor.withOpacity(0.5)],
+              colors: [Colors.white10, primaryColor.withValues(alpha: 0.5)],
             ),
             // boxShadow: [
             //   BoxShadow(
@@ -324,6 +322,19 @@ class _ExampleSidebarXState extends State<ExampleSidebarX> {
                 );
               },
               label: 'Withdrawals'),
+          SidebarXItem(
+              onTap: () {
+                sidebarController.selectedindex.value = 9;
+
+                // setNameProvider.setName('Profile');
+              },
+              iconBuilder: (selected, hovered) {
+                return Icon(
+                  Icons.home,
+                  color: Colors.transparent,
+                );
+              },
+              label: 'Refund'),
           SidebarXItem(
               onTap: () {
                 sidebarController.selectedindex.value = 0;

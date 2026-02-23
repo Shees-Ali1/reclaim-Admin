@@ -119,9 +119,7 @@ class _UserPendingState extends State<UserPending> {
 
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 20),
-
-
+        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
         child: Column(
           children: [
             Row(
@@ -145,19 +143,22 @@ class _UserPendingState extends State<UserPending> {
                       )
                     : SizedBox.shrink(),
                 Padding(
-                  padding:  EdgeInsets.only(left:        width <= 375
-                  ? 10
-                      : width <= 520
-                  ? 10 // You can specify the width for widths less than 425
-                      : width < 768
-                  ? 15 // You can specify the width for widths less than 768
-                      : width < 1024
-                  ? 15 // You can specify the width for widths less than 1024
-                      : width <= 1440
-                  ? 15
-                      : width > 1440 && width <= 2550
-                  ? 15
-                      : 15, top: 20, bottom: 20),
+                  padding: EdgeInsets.only(
+                      left: width <= 375
+                          ? 10
+                          : width <= 520
+                              ? 10 // You can specify the width for widths less than 425
+                              : width < 768
+                                  ? 15 // You can specify the width for widths less than 768
+                                  : width < 1024
+                                      ? 15 // You can specify the width for widths less than 1024
+                                      : width <= 1440
+                                          ? 15
+                                          : width > 1440 && width <= 2550
+                                              ? 15
+                                              : 15,
+                      top: 20,
+                      bottom: 20),
                   child: SizedBox(
                     width: width <= 375
                         ? 200
@@ -183,7 +184,6 @@ class _UserPendingState extends State<UserPending> {
                       decoration: InputDecoration(
                         hintText: "Search",
                         hintStyle: TextStyle(color: Colors.white),
-
                         fillColor: primaryColor,
                         filled: true,
                         border: const OutlineInputBorder(
@@ -248,7 +248,6 @@ class _UserPendingState extends State<UserPending> {
                     return Center(
                       child: CircularProgressIndicator(
                         color: primaryColor,
-
                       ),
                     );
                   } else if (snapshot.hasError ||
@@ -291,14 +290,16 @@ class _UserPendingState extends State<UserPending> {
                                   width: 120,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    image: userImage != null
+                                    image: (userImage != null &&
+                                            userImage.toString().isNotEmpty)
                                         ? DecorationImage(
                                             image: NetworkImage(userImage),
                                             fit: BoxFit.cover,
                                           )
                                         : null,
                                   ),
-                                  child: userImage == null
+                                  child: (userImage == null ||
+                                          userImage.toString().isEmpty)
                                       ? Icon(Icons.person, size: 120)
                                       : null,
                                 ),

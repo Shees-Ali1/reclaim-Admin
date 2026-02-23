@@ -1,4 +1,4 @@
-import 'package:Reclaim_admin_panel/sidebar/sidebar.dart';
+import 'package:reclaim_admin_panel/sidebar/sidebar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -23,25 +23,26 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Reclaim Admin',
-        theme: ThemeData.dark().copyWith(
-          scaffoldBackgroundColor: bgColor,
-          textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-              .apply(bodyColor: Colors.white),
-          canvasColor: secondaryColor,
-        ),
-        getPages: [],
-        unknownRoute: GetPage(
-          name: '/home',
-          page: () => FirebaseAuth.instance.currentUser == null
-              ? LoginPage()
-              : HomeMain(),
-          binding: BindingsBuilder(() {
-            Get.lazyPut(() => UserController());
-          }),
-        )
-        // AdminChatPanel(),
-        );
+      debugShowCheckedModeBanner: false,
+      title: 'Reclaim Admin',
+      scaffoldMessengerKey: rootScaffoldMessengerKey,
+      theme: ThemeData.dark().copyWith(
+        scaffoldBackgroundColor: bgColor,
+        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+            .apply(bodyColor: Colors.white),
+        canvasColor: secondaryColor,
+      ),
+      home: FirebaseAuth.instance.currentUser == null
+          ? const LoginPage()
+          : const HomeMain(),
+      initialBinding: BindingsBuilder(() {
+        Get.lazyPut(() => UserController());
+      }),
+      getPages: [
+        GetPage(name: '/login', page: () => const LoginPage()),
+        GetPage(name: '/home', page: () => const HomeMain()),
+      ],
+      // AdminChatPanel(),
+    );
   }
 }

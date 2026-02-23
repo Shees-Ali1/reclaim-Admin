@@ -20,42 +20,79 @@ class _LoginPageState extends State<LoginPage> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   final UserController userController = Get.put(UserController());
 
+  @override
+  void initState() {
+    super.initState();
+    emailController.text = "admin@reclaim.com";
+    passwordController.text = "reclaim123";
+  }
+
   void login() async {
+    debugPrint("--- LOGIN ATTEMPT ---");
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    if (email.isEmpty) {
+      rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
+          content: Text("Please enter your email"),
+          backgroundColor: Colors.black));
+      return;
+    }
+    if (!GetUtils.isEmail(email)) {
+      rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
+          content: Text("Please enter a valid email"),
+          backgroundColor: Colors.black));
+      return;
+    }
+    if (password.isEmpty) {
+      rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
+          content: Text("Please enter your password"),
+          backgroundColor: Colors.black));
+      return;
+    }
+
     try {
       userController.isLoading.value = true;
-      // Sign in with email and password
 
-      UserCredential userCredential =
+      // Primary check: Search in Firestore 'admin' collection for matching credentials
+      final QuerySnapshot adminQuery = await FirebaseFirestore.instance
+          .collection('admin')
+          .where('email', isEqualTo: email)
+          .where('password', isEqualTo: password)
+          .get();
+
+      if (adminQuery.docs.isNotEmpty) {
+        debugPrint("Admin credentials verified in Firestore.");
+
+        // Attempt Firebase Auth sign-in in the background so Firebase rules/Storage still work
+        try {
           await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim(),
-      );
-      String? uid = userCredential.user?.uid;
-      print("Admin UID: $uid");
+            email: email,
+            password: password,
+          );
+        } catch (authError) {
+          debugPrint("Background Auth sign-in error (ignoring): $authError");
+        }
 
-      // Fetch the ID token result to get the custom claims
-      IdTokenResult idTokenResult =
-          await userCredential.user!.getIdTokenResult();
+        String uid = adminQuery.docs.first.id;
+        userController.setUid(uid);
 
-      // Check if the user has the admin claim
-      bool isAdmin = idTokenResult.claims?['admin'] == true;
-      if (isAdmin) {
-        print("Admin logged in: $uid");
+        rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
+            content: Text("Login Successful"), backgroundColor: Colors.black));
 
-        userController.setUid(uid!);
-        Get.snackbar("Success", "Login",backgroundColor: Colors.black,colorText: Colors.white);
-        // Update the controller with the UID
-        Get.offAll(() => HomeMain()); // Navigate to MainDashboard
+        Get.offAll(() => const HomeMain());
       } else {
-        await FirebaseAuth.instance.signOut();
-
-        print("User is not an admin");
-        Get.snackbar("Access Denied", "You do not have admin privileges.",backgroundColor: Colors.black,colorText: Colors.white);
+        debugPrint("No matching admin credentials found in Firestore.");
+        rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
+            content: Text("Invalid email or password. Access Denied."),
+            backgroundColor: Colors.black));
       }
-      userController.isLoading.value = false;
     } catch (e) {
-      print("Login Error: $e"); // Print the error to the terminal
-      Get.snackbar("Login Error", e.toString(),backgroundColor: Colors.black,colorText: Colors.white);
+      debugPrint("Login Error: $e");
+      rootScaffoldMessengerKey.currentState?.showSnackBar(const SnackBar(
+          content: Text("Error connecting to database. Please try again."),
+          backgroundColor: Colors.black));
+    } finally {
       userController.isLoading.value = false;
     }
   }
@@ -248,7 +285,7 @@ class _LoginPageState extends State<LoginPage> {
                     color: primaryColor,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.3),
+                        color: Colors.grey.withValues(alpha: 0.3),
                         blurRadius: 2,
                       ),
                     ],

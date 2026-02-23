@@ -44,7 +44,6 @@ class _UserDataState extends State<UserData>
               height: 40,
               text: 'Delete',
               textColor: Colors.white,
-
               onPressed: () => Navigator.of(context).pop(true),
             ),
           ],
@@ -115,8 +114,7 @@ class _UserDataState extends State<UserData>
     final width = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 20),
-
+      padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),
       child: Column(
         children: [
           Row(
@@ -182,7 +180,6 @@ class _UserDataState extends State<UserData>
                       hintText: "Search",
                       fillColor: primaryColor,
                       hintStyle: TextStyle(color: Colors.white),
-
                       filled: true,
                       border: const OutlineInputBorder(
                         borderSide: BorderSide.none,
@@ -280,9 +277,9 @@ class _UserDataState extends State<UserData>
       stream: FirebaseFirestore.instance.collection('userDetails').snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator(
+          return const Center(
+              child: CircularProgressIndicator(
             color: primaryColor,
-
           ));
         }
 
@@ -336,12 +333,12 @@ class _UserDataState extends State<UserData>
                             color: userDetail['userImage'] != null
                                 ? Colors.transparent
                                 : Colors.red,
-
                           ),
-                          child: userDetail['userImage'] != null
+                          child: (userDetail['userImage'] != null &&
+                                  userDetail['userImage'].toString().isNotEmpty)
                               ? CircleAvatar(
-                                  backgroundImage: NetworkImage(userDetail['userImage'])
-                                )
+                                  backgroundImage:
+                                      NetworkImage(userDetail['userImage']))
                               : const Icon(Icons.person, color: Colors.white),
                         ),
                       ),
@@ -379,8 +376,7 @@ class _UserDataState extends State<UserData>
                     ],
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(left: 30,right: 10),
-
+                    padding: const EdgeInsets.only(left: 30, right: 10),
                     child: const Divider(
                       color: Colors.grey,
                       thickness: 2,

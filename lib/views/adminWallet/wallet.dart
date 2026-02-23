@@ -1,4 +1,4 @@
-import 'package:Reclaim_admin_panel/views/adminWallet/wallet_details.dart';
+import 'package:reclaim_admin_panel/views/adminWallet/wallet_details.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_svg/svg.dart';

@@ -1,4 +1,4 @@
-import 'package:Reclaim_admin_panel/views/withdrawals/withdrawal_request.dart';
+import 'package:reclaim_admin_panel/views/withdrawals/withdrawal_request.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -152,9 +152,9 @@ class _Withdrawal_ScreenState extends State<Withdrawal_Screen> {
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator(
+                    return Center(
+                        child: CircularProgressIndicator(
                       color: primaryColor,
-
                     ));
                   }
 
@@ -184,9 +184,9 @@ class _Withdrawal_ScreenState extends State<Withdrawal_Screen> {
                         builder: (context, userSnapshot) {
                           if (userSnapshot.connectionState ==
                               ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator(
+                            return Center(
+                                child: CircularProgressIndicator(
                               color: primaryColor,
-
                             ));
                           }
 
@@ -215,8 +215,16 @@ class _Withdrawal_ScreenState extends State<Withdrawal_Screen> {
                                 children: [
                                   Expanded(
                                     child: CircleAvatar(
-                                      backgroundImage: NetworkImage(
-                                          userDetails['userImage'] ?? ''),
+                                      backgroundImage:
+                                          (userDetails['userImage'] != null &&
+                                                  userDetails['userImage']
+                                                      .toString()
+                                                      .isNotEmpty)
+                                              ? NetworkImage(
+                                                  userDetails['userImage'])
+                                              : const AssetImage(
+                                                      'assets/images/logo.png')
+                                                  as ImageProvider,
                                       radius: 35,
                                     ),
                                   ),
